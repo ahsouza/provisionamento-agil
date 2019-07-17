@@ -12,7 +12,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "testvm" do |testvm|
     testvm.vm.box = "ubuntu/trusty64"
     testvm.vm.network :private_network, ip: "192.168.33.2"
-    testvm.vm.provision "shell", path: "run.sh"
+    
+    testvm.vm.provision "ansible" do |ansible|
+      ansible.playbook = "server.yaml"
+      ansible.verbose = "vvv"
+    end
+
   end
   # This block gives me access to the virtual machine provider
   # (VirtualBox)

@@ -9,8 +9,8 @@
 * Azure
 * AWS
 * Google
-* digitalocean
-* proxmox
+* Digitalocean
+* Proxmox
 * Openstack
 * Docker
 
@@ -67,3 +67,5 @@ vagrant ssh
 ```sh
 vagrant provision
 ```
+
+

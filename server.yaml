@@ -1,0 +1,9 @@
+- hosts: all
+  sudo: True
+  user: ahsouza
+  tasks:
+    - name: "Atualizar pacotes"
+      shell: sudo apt-get update
+
+    - name: "Instalar o nginx"  
+      shell: sudo apt-get -y install nginx
