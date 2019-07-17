@@ -61,3 +61,9 @@ vagrant destroy
 ```sh
 vagrant ssh
 ```
+
+#### Run only the shell script provisioning driver
+
+```sh
+vagrant provision
+```
