@@ -1,5 +1,18 @@
 # Orquestration of Machine Virtaul with Vagrant
 
+### Vagrant currently supports the following providers
+
+* VirtualBox
+* Hyper-V
+* VMWARE
+* KVM
+* Azure
+* AWS
+* Google
+* digitalocean
+* proxmox
+* Openstack
+* Docker
 
 ## Installing VirtualBox Oracle
 
@@ -23,7 +36,7 @@ sudo ./virtualbox.run
 
 
 
-## Setting and Up machines virtual with Vagrant
+## Commands Vagrant
 
 #### Raise a virtual machine
 
@@ -37,14 +50,14 @@ vagrant up
 vagrant halt
 ```
 
+#### Destroy a virtual machine
+
+```sh
+vagrant destroy
+```
+
 #### Access via SSH a virtual machine
 
 ```sh
 vagrant ssh
-```
-
-### 2. Up with Shell-Script
-```sh
-chmod +x run.sh
-./run.sh
 ```
