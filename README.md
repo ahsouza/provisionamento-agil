@@ -14,9 +14,8 @@
 * Openstack
 * Docker
 
-## Installing VirtualBox Oracle
+### Installing VirtualBox Oracle v.5.2 in Linux
 
-### Download VirtualBox v.5.2
 
 ```sh
 wget -c https://download.virtualbox.org/virtualbox/5.2.20/VirtualBox-5.2.20-125813-Linux_amd64.run -O virtualbox.run
@@ -35,8 +34,36 @@ sudo ./virtualbox.run
 ```
 
 
+### Installing Vagrant in Linux
 
-## Commands Vagrant
+```sh
+sudo apt-get install vagrant
+```
+
+#### Start Vagrant
+
+```sh
+vagrant init
+```
+
+### Installing Ansible in Linux
+
+```sh
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+```
+
+#### Check Installation
+
+```sh
+ansible-playbook -h
+```
+
+
+
+#### Commands Vagrant
 
 #### Raise a virtual machine
 
