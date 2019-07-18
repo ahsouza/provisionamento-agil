@@ -1,4 +1,4 @@
-# Orquestration of Machine Virtaul with Vagrant
+# Orquestration of Virtual Machines with Vagrant
 
 
 ![alt text](https://t1.daumcdn.net/cfile/tistory/9963D13A5B71BCC63C)
