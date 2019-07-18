@@ -1,5 +1,9 @@
 # Orquestration of Machine Virtaul with Vagrant
 
+
+![alt text](https://t1.daumcdn.net/cfile/tistory/9963D13A5B71BCC63C)
+
+
 ### Vagrant currently supports the following providers
 
 * VirtualBox
@@ -96,3 +100,4 @@ vagrant provision
 ```
 
 
+![alt text](http://cdn-ak.f.st-hatena.com/images/fotolife/m/matsuokah/20151223/20151223130449.png)

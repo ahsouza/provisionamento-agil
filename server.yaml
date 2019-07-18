@@ -2,16 +2,13 @@
   sudo: True
   user: vagrant
   tasks:
-    - name: "Atualizar pacotes e instalar nginx"
-      apt: name=nginx state=latest update_cache=yes install_recommends=yes
-
     - name: "Instalar nginx packages"
-      yum: name=nginx state=present
+      yum: name=nginx state=latest
       with_items: redhat_pkg
       when: ansible_os_family == "RedHat"
 
     - name: "Instalar nginx packages"
-      apt: name=nginx state=present update_cache=yes
+      apt: name=nginx state=latest update_cache=yes install_recommends=yes
       with_items: ubuntu_pkg
       environment: env
       when: ansible_os_family == "Debian"
