@@ -1,6 +1,11 @@
 - hosts: all
   sudo: True
   user: vagrant
+  vars:
+    mysql_root_password: root
+    mysql_wp_user: wordpress
+    mysql_wp_password: wordpress
+    wordpress_db_name: wordpress
   tasks:
     # Installing nginx on different linux distributions
     - name: "Instalando nginx packages em RedHat"
@@ -22,26 +27,85 @@
     - name: "Instalando MySQL"
       apt: name=mysql-server state=latest install_recommends=yes
 
-    # Creating blog directory
-    - name: "Criando diretório /opt/wordpress"
-      shell: mkdir -p /opt/wordpress
+    # Installing extensions MySQL for PHP
+    - name: "Instalando extensões de MySQL para PHP"
+      apt: name=php5-mysql state=latest install_recommends=yes
+
+    # Installing libs Python
+    - name: "Instalando biblioteca python-mysqldb"
+      apt: name=python-mysqldb state=latest install_recommends=yes
 
     # Copy blog.nginx settings
     - name: "Copiando configuração de blog.nginx para /etc/nginx/sites-available/blog"
       copy: src=nginx/blog.nginx dest=/etc/nginx/sites-available/blog
-
-    # Enable Site
-    - name: "Ativando o site"
-      shell: ln -fs /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/blog
-
+    
     # Delete site default
     - name: "Apagando site default"
-      shell: rm -f /etc/nginx/sites-enabled/default
+      file: path=/etc/nginx/sites-enabled/default state=absent
+    
+    # Enable Site
+    - name: "Ativando o site"
+      file: src=/etc/nginx/sites-available/blog dest=/etc/nginx/sites-enabled/blog state=link
 
     # Restart nginx
     - name: "Reiniciando o NGINX"
-      shell: service nginx restart
+      service: name=nginx state=restarted
 
+    # Creating directory wordpress
+    - name: "Criando /opt/wordpress"
+      file: dest=/opt/wordpress mode=755 state=directory owner=www-data
+
+    # Download wordpress
+    - name: "Baixando Wordpress última versão"
+      get_url: url=https://wordpress.org/latest.tar.gz dest=/tmp/latest.tar.gz
+
+    # Open Wordpress
+    - name: "Executando wordpress em /opt/wordpress"
+      unarchive: src=/tmp/latest.tar.gz dest=/opt copy=no
+
+    # Fixing permissions
+    - name: "Corrigindo permissões"
+      file: path=/opt/wordpress recurse=yes owner=www-data group=www-data
+
+    # Started MySQL
+    - name: "Iniciando MySQL"
+      service: name=mysql state=started enabled=true
+
+    # Create my.conf
+    - name: "Criando .my.cnf"
+      template: src=config/my.cnf dest=~/.my.cnf mode=0600
+
+    # Create password for root
+    - name: "Criando senha de root para root@mysql"
+      mysql_user: name=root password="{{ mysql_root_password }}" check_implicit_admin=yes priv="*.*:ALL,GRANT" state=present host="{{ item }}"
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
+
+    # Creating Wordpress DB
+    - name: "Criando Wordpress Database"
+      mysql_db: name=wordpress 
+                login_user=root 
+                login_password="{{ mysql_root_password }}" 
+                state=present
+
+    # Creating user Wordpress
+    - name: "Criando usuário Wordpress"
+      mysql_user: name="{{ mysql_wp_user }}"
+                  password="{{ mysql_wp_password}}"
+                  priv="{{ wordpress_db_name }}".*:ALL
+                  check_implicit_admin=yes
+                  login_user=root
+                  login_password="{{ mysql_root_password }}"
+                  host="{{ item }}"
+                  state=present
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
     # Create a page for test
     - name: "Criando uma pagina de teste do PHP"
       copy: src=pages/test.php dest=/opt/wordpress
