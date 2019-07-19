@@ -1,49 +1,47 @@
-<?php phpinfo(); ?>
-
 - hosts: all
   sudo: True
   user: vagrant
   tasks:
     # Installing nginx on different linux distributions
-    - name: "Instalar nginx packages"
+    - name: "Instalando nginx packages em RedHat"
       yum: name=nginx state=latest
       with_items: redhat_pkg
       when: ansible_os_family == "RedHat"
 
-    - name: "Instalar nginx packages"
+    - name: "Instalando nginx packages em Debian"
       apt: name=nginx state=latest update_cache=yes install_recommends=yes
       with_items: ubuntu_pkg
       environment: env
       when: ansible_os_family == "Debian"
 
     # Installing PHP-FPM
-    - name: "Instalar PHP-FPM"
-      apt: name=php7-fpm state=latest install_recommends=yes
+    - name: "Instalando PHP-FPM"
+      apt: name=php5-fpm state=latest install_recommends=yes
 
     # Installing MYSQL
-    - name: "Instalar MySQL"  
+    - name: "Instalando MySQL"
       apt: name=mysql-server state=latest install_recommends=yes
 
     # Creating blog directory
-    - name: "Criar diretório /opt/wordpress"
+    - name: "Criando diretório /opt/wordpress"
       shell: mkdir -p /opt/wordpress
 
     # Copy blog.nginx settings
-    - name: "Copiar configuração de blog.nginx para /etc/nginx/sites-available/blog"
-      copy: src=blog.nginx dest=/etc/nginx/sites-available/blog
+    - name: "Copiando configuração de blog.nginx para /etc/nginx/sites-available/blog"
+      copy: src=nginx/blog.nginx dest=/etc/nginx/sites-available/blog
 
     # Enable Site
-    - name: "Ativar o site"
+    - name: "Ativando o site"
       shell: ln -fs /etc/nginx/sites-available/blog /etc/nginx/sites-enabled/blog
 
     # Delete site default
-    - name: "Apaga site default"
+    - name: "Apagando site default"
       shell: rm -f /etc/nginx/sites-enabled/default
 
     # Restart nginx
-    - name: "Reiniciar o NGINX"
+    - name: "Reiniciando o NGINX"
       shell: service nginx restart
 
     # Create a page for test
-    - name: "Criar uma pagina de teste do PHP"
-      copy: src=test.php dest=/opt/wordpress
+    - name: "Criando uma pagina de teste do PHP"
+      copy: src=pages/test.php dest=/opt/wordpress
